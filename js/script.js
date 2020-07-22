@@ -55,7 +55,7 @@ for (let i = 0; i < brickRowCount; i++) {
 function drawBall() {
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
-    ctx.fillStyle = '#0095dd';
+    ctx.fillStyle = '#4f56a8';
     ctx.fill();
     ctx.closePath();
 }
@@ -64,7 +64,7 @@ function drawBall() {
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
-    ctx.fillStyle = '#0095dd';
+    ctx.fillStyle = '#d4a210';
     ctx.fill();
     ctx.closePath();
 }
@@ -82,7 +82,7 @@ function drawBricks() {
         column.forEach(brick => {
             ctx.beginPath();
             ctx.rect(brick.x, brick.y, brick.w, brick.h);
-            ctx.fillStyle = brick.visible ? '#0095dd' : 'transparent';
+            ctx.fillStyle = brick.visible ? '#32713b' : 'transparent';
             ctx.fill();
             ctx.closePath();
         })
@@ -125,6 +125,25 @@ function moveBall() {
     ) {
         ball.dy = -ball.speed;
     }
+
+    // Brick collision
+    bricks.forEach(column => {
+        column.forEach(brick => {
+            if (brick.visible) {
+                if (
+                    ball.x - ball.size > brick.x && // left brick side check
+                    ball.x + ball.size < brick.x + brick.w && // right brick side check
+                    ball.y + ball.size > brick.y && // top brick side check
+                    ball.y - ball.size < brick.y + brick.h // bottom brick side check
+                ) {
+                    ball.dy *= -1;
+                    brick.visible = false;
+
+                    //increaseScore();
+                }
+            }
+        });
+    });
 }
 
 function draw() {
